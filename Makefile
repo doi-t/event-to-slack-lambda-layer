@@ -20,7 +20,8 @@ destroy: init
 
 invoke:
 	aws lambda invoke --function-name $$(terraform output -json | jq .lambda_function_name.value -r) output.json
+	cat output.json | jq
 
 clean:
-	rm -rf package 
+	rm -rf packages
 	rm -rf build
