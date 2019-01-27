@@ -18,7 +18,7 @@ data "external" "source_code_hash" {
 
   query = {
     package_file = "${local.package_file_path}"
-    source_dir   = "${local.package_source_dir}"
+    source_dir   = "${var.source_dir}"
   }
 }
 
