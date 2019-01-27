@@ -19,7 +19,7 @@ destroy: init
 	terraform destroy
 
 invoke:
-	aws lambda invoke --function-name $(terraform output -json | jq .lambda_function_name.value -r) output.json
+	aws lambda invoke --function-name $$(terraform output -json | jq .lambda_function_name.value -r) output.json
 
 clean:
 	rm -rf package 
