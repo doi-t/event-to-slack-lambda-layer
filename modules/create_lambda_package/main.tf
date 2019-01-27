@@ -10,7 +10,7 @@ locals {
   package_file_path  = "${local.archive_source_dir}/${var.package_name}.zip"
 }
 
-# generate source code hash depending on package_file_path and source code in source directory
+# Generate source code hash depending on package_file_path and source code in source directory
 # Note that any code changes in source directory changes the result of source code hash
 # Ref. https://github.com/hashicorp/terraform/issues/10878#issuecomment-453241734
 data "external" "source_code_hash" {
@@ -18,7 +18,7 @@ data "external" "source_code_hash" {
 
   query = {
     package_file = "${local.package_file_path}"
-    source_dir   = "${local.package_source_dir}"
+    source_dir   = "${var.source_dir}"
   }
 }
 

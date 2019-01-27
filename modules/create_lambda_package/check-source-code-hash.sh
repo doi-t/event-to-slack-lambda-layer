@@ -4,8 +4,7 @@
 # Exit if any of the intermediate steps fail
 set -ex
 
-# Extract "foo" and "baz" arguments from the input into
-# FOO and BAZ shell variables.
+# Extract given arguments from the input into shell variables.
 # jq will ensure that the values are properly quoted
 # and escaped for consumption by the shell.
 eval "$(jq -r '@sh "PACKAGE_FILE=\(.package_file) SOURCE_DIR=\(.source_dir)"')"
@@ -14,10 +13,17 @@ eval "$(jq -r '@sh "PACKAGE_FILE=\(.package_file) SOURCE_DIR=\(.source_dir)"')"
 if [ ! -e $PACKAGE_FILE ]; then
     mkdir -p $(dirname $PACKAGE_FILE)
     # Generate empty file if there is no lambda package. Terraform will create a proper package later on.
+    # Note that hash value in the next plan is always different because of this empty file.
+    # As a result, you always see another function and layer deployment even you did not change any code in source directory.
+    # This problem will be remained unless terraform allows us to update data value in plan
     touch $PACKAGE_FILE
 fi
-# check lambda package and detect any code changes in 'src' directory
-SHA256=$(find $PACKAGE_FILE $SOURCE_DIR -type f -print0 | sort -z | xargs -0 sha1sum | sha1sum | awk '{ print $1 }')
+# detect any code changes in source directory
+SHA256=$(find $PACKAGE_FILE $SOURCE_DIR -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | awk '{ print $1 }')
+
+# Debug codes
+# find $PACKAGE_FILE $SOURCE_DIR -type f -print0 | sort -z | xargs -0 sha256sum > /tmp/$(basename $PACKAGE_FILE).out
+# echo $SHA256 >> /tmp/$(basename $PACKAGE_FILE).out
 
 # Safely produce a JSON object containing the result value.
 # jq will ensure that the value is properly quoted
