@@ -5,6 +5,7 @@ import layer_sample
 
 def handler(event, option):
     print("hello, lambda layers!")
+
     opt = (
         subprocess.run(["find", "/opt"], capture_output=True)
         .stdout.decode("utf-8")
