@@ -4,7 +4,7 @@ locals {
 }
 
 module "layer_package" {
-  source           = "modules/create_lambda_package"
+  source           = "github.com/doi-t/terraform-lambda-python-package?ref=v0.1.0"
   package_name     = "${local.layer_name}"
   python_version   = "${local.layer_python_version}"
   is_lambda_layers = true

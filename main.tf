@@ -7,7 +7,7 @@ locals {
 }
 
 module "function_package" {
-  source         = "modules/create_lambda_package"
+  source         = "github.com/doi-t/terraform-lambda-python-package?ref=v0.1.0"
   package_name   = "${local.function_name}"
   python_version = "${local.function_python_version}"
   source_dir     = "src/event-to-slack"
