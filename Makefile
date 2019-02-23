@@ -13,7 +13,7 @@ init:
 		-backend-config="region=$(TF_REGION)"
 
 apply: init
-	terraform apply
+	terraform apply -auto-approve
 
 destroy: init
 	terraform destroy

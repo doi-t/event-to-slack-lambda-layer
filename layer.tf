@@ -1,3 +1,5 @@
+variable "slack_bot_token" {}
+
 locals {
   layer_name           = "event-to-slack-lambda-layer"
   layer_python_version = "3.7"
@@ -8,7 +10,7 @@ module "layer_package" {
   package_name     = "${local.layer_name}"
   python_version   = "${local.layer_python_version}"
   is_lambda_layers = true
-  source_dir       = "src/layers/sample"
+  source_dir       = "src/layers/event_to_slack"
 }
 
 # > For larger deployment packages it is recommended by Amazon to upload via S3, since the S3 API has better support for uploading large files efficiently.
@@ -19,4 +21,10 @@ resource "aws_lambda_layer_version" "event_to_slack_lambda_layer" {
   layer_name       = "${local.layer_name}"
 
   compatible_runtimes = ["python${local.layer_python_version}"]
+}
+
+resource "aws_ssm_parameter" "slack_bot_token" {
+  name  = "event-to-slack-bot-token"
+  type  = "SecureString"
+  value = "${var.slack_bot_token}"
 }
